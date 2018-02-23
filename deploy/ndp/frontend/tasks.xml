@@ -1,0 +1,19 @@
+<project>
+
+    <!--clean-->
+    <target name="clean">
+        <echo message="begin clean..."/>
+        <echo message="begin delete compressed..."/>
+        <delete dir="${basedir}/${compress.dir}"/>
+    </target>
+
+    <target name="cp">
+        <copy todir="${basedir}/${compress.dir}" overwrite="true">
+            <fileset dir="${basedir}">
+                <exclude name="node_modules/"></exclude>
+                <exclude name=",cache/"></exclude>
+            </fileset>
+        </copy>
+    </target>
+
+</project>

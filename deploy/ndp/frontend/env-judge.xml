@@ -1,0 +1,67 @@
+<project>
+    <regexp id="regexp_env_test" pattern="^${root_dir}/.*?(_|-)(${test_key}|${dev_key})"/>
+    <regexp id="regexp_env_pre" pattern="^${root_dir}/.*?(_|-)${pre_key}"/>
+    <regexp id="regexp_env_online" pattern="^${root_dir}/.*?(_|-)${online_key}"/>
+
+    <regexp id="regexp_project" pattern="^${root_dir}/.*?${project_key}"/>
+
+    <condition property="is_test">
+        <matches string="${basedir}">
+            <regexp refid="regexp_env_test"/>
+        </matches>
+    </condition>
+
+    <condition property="is_pre">
+        <matches string="${basedir}">
+            <regexp refid="regexp_env_pre"/>
+        </matches>
+    </condition>
+
+    <condition property="is_online">
+        <matches string="${basedir}">
+            <regexp refid="regexp_env_online"/>
+        </matches>
+    </condition>
+
+    <condition property="is_online_pre">
+        <or>
+            <istrue value="${is_online}"/>
+            <istrue value="${is_pre}"/>
+        </or>
+    </condition>
+
+    <condition property="is_project">
+        <matches string="${basedir}">
+            <regexp refid="regexp_project"/>
+        </matches>
+    </condition>
+
+    <condition property="is_test_project">
+        <and>
+            <istrue value="${is_test}"/>
+            <istrue value="${is_project}"/>
+        </and>
+    </condition>
+
+    <condition property="is_pre_project">
+        <and>
+            <istrue value="${is_pre}"/>
+            <istrue value="${is_project}"/>
+        </and>
+    </condition>
+
+    <condition property="is_online_project">
+        <and>
+            <istrue value="${is_online}"/>
+            <istrue value="${is_project}"/>
+        </and>
+    </condition>
+    <!--预发环境与线上环境打包分开，因为静态资源域名分离-->
+    <!--<condition property="is_online_pre_project">-->
+        <!--<and>-->
+            <!--<istrue value="${is_online_pre}"/>-->
+            <!--<istrue value="${is_project}"/>-->
+        <!--</and>-->
+    <!--</condition>-->
+
+</project>
