@@ -9,7 +9,6 @@ lib/
 logs/
 .cache/
 resource/repository/
-uploadTemp/
 
 # Editor directories and files
 .idea

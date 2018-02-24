@@ -49,9 +49,6 @@ async function start () {
 
     // 文件上传multiple/from-data 解析到req.body
     app.use(koaBody({
-        formidable: {
-            uploadDir: './uploadTemp'
-        },
         multipart: true,
         urlencoded: true
     }));

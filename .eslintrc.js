@@ -21,6 +21,7 @@ module.exports = {
         // allow debugger during development
         'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
         'no-return-await': 'off',
+        'no-new': 'off',
         "semi": ["off", "never"], // 禁止使用分号
     }
 }

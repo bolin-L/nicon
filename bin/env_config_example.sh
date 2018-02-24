@@ -19,7 +19,7 @@ export REDIS_DB=0;
 
 
 # config your website host
-export productHost='';
+export productHost='icon.bolin.site';
 
 
 # if you want login by github and upload by qiniu, set productType
@@ -42,3 +42,6 @@ export QINIU_UPLOAD_ACCESS_KEY='';
 export QINIU_UPLOAD_SECRET_KEY='';
 export QINIU_UPLOAD_BUCKET='';
 export QINIU_UPLOAD_CDN_HOST='';
+
+# start command
+node index.js

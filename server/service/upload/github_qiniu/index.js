@@ -1,2 +1,2 @@
-upload = require('../qiniu/index');
+let upload = require('../qiniu/index');
 module.exports = upload;

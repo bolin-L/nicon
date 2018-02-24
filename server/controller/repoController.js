@@ -133,7 +133,7 @@ class RepoController {
         let query = ctx.request.query || {};
         let repoList = [];
 
-        if (!!parseInt(params.userId)) {
+        if (parseInt(params.userId)) {
             repoList = await this.getRepoListByUserId(params, query, ctx);
         } else {
             repoList = await this.getAllRepoList(query)

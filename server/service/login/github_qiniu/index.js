@@ -1,2 +1,2 @@
-login = require('../github/index');
+let login = require('../github/index');
 module.exports = login;

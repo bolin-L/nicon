@@ -38,10 +38,10 @@ class QiniuUpload {
     getUploadConfig (localFile, key) {
         let mac = new qiniu.auth.digest.Mac(config.accessKey, config.secretKey);
         let options = {
-            scope: config.bucket,
+            scope: config.bucket
         };
         let putPolicy = new qiniu.rs.PutPolicy(options);
-        let uploadToken=putPolicy.uploadToken(mac);
+        let uploadToken = putPolicy.uploadToken(mac);
         let uploadConfig = new qiniu.conf.Config();
         uploadConfig.zone = qiniu.zone.Zone_z0;
         let formUploader = new qiniu.form_up.FormUploader(uploadConfig);
@@ -58,7 +58,7 @@ class QiniuUpload {
     async qiniuUpload (options) {
         return new Promise(function (resolve) {
             options.formUploader.putFile(options.uploadToken, options.key, options.localFile, options.putExtra,
-                function(respErr, respBody, respInfo) {
+                function (respErr, respBody, respInfo) {
                     if (respErr) {
                         throw new Error(respErr);
                     }
@@ -68,7 +68,7 @@ class QiniuUpload {
                         console.log(respInfo.statusCode);
                         console.log(respBody);
                     }
-            });
+                });
         })
     }
 

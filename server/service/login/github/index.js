@@ -1,8 +1,5 @@
-let log = require('../../../util/log');
 require('request');
 let rp = require('request-promise');
-let http = require('http');
-let https = require('https');
 let config = require('./config');
 
 class GithubOpenIdLogin {
@@ -51,7 +48,6 @@ class GithubOpenIdLogin {
             userName: userInfo.login || userInfo.name
         };
     }
-
 }
 
 let loginIns = new GithubOpenIdLogin();
