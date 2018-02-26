@@ -30,7 +30,7 @@ class QiniuUpload {
             let fontPath = path.join(fontDirPath, font);
             let fontContent = await fileUtil.readFile(fontPath);
             let uc = this.getUploadConfig(fontPath, cryptoUtil.md5(fontContent) + '.' + fileExt);
-            fontMap[fileExt] = config.cdnHost + '/' + await this.qiniuUpload(uc);
+            fontMap[fileExt] = '//' + config.cdnHost + '/' + await this.qiniuUpload(uc);
         }
         return fontMap;
     }
