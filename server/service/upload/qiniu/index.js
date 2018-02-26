@@ -100,7 +100,7 @@ class QiniuUpload {
         let cssFiles = await fileUtil.readDirector(cssDirPath);
         let cssPath = path.join(dirPath, './css/' + (cssFiles[0] || 'icons.css'));
         let uc = this.getUploadConfig(cssPath, cryptoUtil.md5(cssContent) + '.css');
-        return config.cdnHost + '/' + await this.qiniuUpload(uc);
+        return '//' + config.cdnHost + '/' + await this.qiniuUpload(uc);
     }
 }
 
