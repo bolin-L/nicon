@@ -10,6 +10,10 @@ logs/
 .cache/
 resource/repository/
 
+# personal start script
+start.sh
+start.bat
+
 # Editor directories and files
 .idea
 *.suo

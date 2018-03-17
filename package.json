@@ -1,7 +1,7 @@
 {
   "name": "icon-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "字体图标管理平台 http://icon.bolin.site/#/",
   "main": "index.js",
   "scripts": {
     "publish": "pm2 start index.js --name iconServer -f -e ./logs/icon.err.log -o ./logs/icon.log",
