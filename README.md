@@ -98,7 +98,7 @@ sh yourStartConfigPath/start.sh
 如果不出什么意外，这个时候应该已经启动好了。服务监听的端口是4843, 当然这只是个纯服务，具体的页面还需要部署前端工程[nicon-front](https://github.com/bolin-L/nicon-front)。
 
 ## 前端静态资源部署
-图标管理平台采用的是前后端完全分离的开发方式，前端代码放在独立的[icon-front](https://github.com/bolin-L/nicon-front)。前端只需要提供完整的静态html页面与其他静态即可。静态资源的访问通过配置nginx代理实现页面的访问，跟服务端工程毫无关系，服务端只负责提供异步接口。
+图标管理平台采用的是前后端完全分离的开发方式，前端代码放在独立的[icon-front](https://github.com/bolin-L/nicon-front)。前端只需要提供完整的静态html页面与其他静态资源即可。静态资源的访问通过配置nginx代理实现页面的访问，跟服务端工程毫无关系，服务端只负责提供异步接口。
 
 1、克隆前端项目到本地, 与nicon文件夹同级
 
@@ -285,6 +285,12 @@ module.exports = uploadIns.upload.bind(uploadIns);
 ```
 
 至此就已经配置完毕，启动工程就好了。
+
+## 单元测试
+待补充....
+
+## License
+MIT
 
 
 
