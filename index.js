@@ -14,7 +14,13 @@ async function start () {
     // 处理全局错误
     app.use(async (ctx, next) => {
         try {
-            return await next();
+            const start = +new Date();
+            const result = await next();
+            const spendTime = +new Date() - start;
+            const normalTTL = 350;
+            const requestStatus = spendTime > normalTTL ? 'need optimise': 'normal';
+            log.debug(`[${requestStatus}] request [${ctx.originalUrl}] spend time is ${spendTime}ms ...`);
+            return result;
         } catch (error) {
             // todo 做日志处理
             // 统一错误出口
