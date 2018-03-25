@@ -18,7 +18,7 @@ async function start () {
             const result = await next();
             const spendTime = +new Date() - start;
             const normalTTL = 350;
-            const requestStatus = spendTime > normalTTL ? 'need optimise': 'normal';
+            const requestStatus = spendTime > normalTTL ? 'optimize': 'normal';
             log.debug(`[${requestStatus}] request [${ctx.originalUrl}] spend time is ${spendTime}ms ...`);
             return result;
         } catch (error) {
