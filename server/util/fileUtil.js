@@ -2,49 +2,80 @@ const fs = require('fs');
 const SVGO = require('svgo');
 let rimraf = require('rimraf');
 let mkdirp = require('mkdirp');
-// mergePaths: true,
-//     convertShapeToPath: true,
-//     removeDimensions: true,
-//     cleanupAttrs: true,
-//     removeDoctype: true,
-//     removeXMLProcInst: true,
-//     removeComments: true,
-//     removeMetadata: true,
-//     removeTitle: true,
-//     removeDesc: true,
-//     removeUselessDefs: true,
-//     removeXMLNS: true,
-//     removeEditorsNSData: true,
-//     removeEmptyAttrs: true,
-//     removeHiddenElems: true,
-//     removeEmptyText: true,
-//     removeEmptyContainers: true,
-//     removeViewBox: true,
-//     cleanupEnableBackground: true,
-//     convertStyleToAttrs: true,
-//     convertPathData: true,
-//     convertTransform: true,
-//     removeUnknownsAndDefaults: true,
-//     removeNonInheritableGroupAttrs: true,
-//     removeUselessStrokeAndFill: true,
-//     removeUnusedNS: true,
-//     cleanupIDs: true,
-//     cleanupNumericValues: true,
-//     cleanupListOfValues: true,
-//     moveElemsAttrsToGroup: true,
-//     moveGroupAttrsToElems: true,
-//     collapseGroups: true,
-//     removeRasterImages: true,
-//     sortAttrs: true,
-//     removeDimensions: true,
-//     removeAttrs: true,
-//     removeElementsByAttr: true,
-//     removeStyleElement: true,
-//     removeScriptElement: true,
-//     addAttributesToSVGElement: {
-//     attribute: 'my-attribute'
-// }
-const svgo = new SVGO({});
+
+const svgo = new SVGO({
+    plugins: [{
+        cleanupAttrs: true,
+    }, {
+        removeDoctype: true,
+    }, {
+        removeXMLProcInst: true,
+    }, {
+        removeComments: true,
+    }, {
+        removeMetadata: true,
+    }, {
+        removeTitle: true,
+    }, {
+        removeDesc: true,
+    }, {
+        removeUselessDefs: true,
+    }, {
+        removeEditorsNSData: true,
+    }, {
+        removeEmptyAttrs: true,
+    }, {
+        removeHiddenElems: true,
+    }, {
+        removeEmptyText: true,
+    }, {
+        removeEmptyContainers: true,
+    }, {
+        removeViewBox: false,
+    }, {
+        cleanUpEnableBackground: true,
+    }, {
+        convertStyleToAttrs: true,
+    }, {
+        convertColors: true,
+    }, {
+        convertPathData: true,
+    }, {
+        convertTransform: true,
+    }, {
+        removeUnknownsAndDefaults: true,
+    }, {
+        removeNonInheritableGroupAttrs: true,
+    }, {
+        removeUselessStrokeAndFill: true,
+    }, {
+        removeUnusedNS: true,
+    }, {
+        cleanupIDs: true,
+    }, {
+        cleanupNumericValues: true,
+    }, {
+        moveElemsAttrsToGroup: true,
+    }, {
+        moveGroupAttrsToElems: true,
+    }, {
+        collapseGroups: true,
+    }, {
+        removeRasterImages: false,
+    }, {
+        mergePaths: true,
+    }, {
+        convertShapeToPath: true,
+    }, {
+        sortAttrs: true,
+    }, {
+        transformsWithOnePath: false,
+    }, {
+        removeDimensions: true,
+    }, {
+        removeAttrs: {attrs: '(stroke|fill)'},
+    }]
+});
 
 module.exports = {
     /**
@@ -154,7 +185,7 @@ module.exports = {
      */
     async formatSvgFile (content, resetColor = true) {
         // 添加style
-        if (content.indexOf('style=') !== -1) {
+        if (/style=\"\S*\"/.test(content)) {
             content = content.replace(/style="(.*?)"/, 'style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"');
         } else {
             content = content.replace(/<svg/, '<svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"');
