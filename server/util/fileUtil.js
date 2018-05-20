@@ -114,7 +114,7 @@ module.exports = {
      * @return   {Object}           data                        文件内容
      */
     async readFile (fPath, options = {}) {
-        if (!fPath) {
+        if (!fPath || !await this.exists(fPath)) {
             throw new Error('file fPath error')
         }
         return await fs.readFileSync(fPath, options);

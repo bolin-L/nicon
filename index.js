@@ -1,15 +1,63 @@
 let Koa = require('koa');
 let app = new Koa();
+let fileUtil = require('./server/util/fileUtil');
 let log = require('./server/util/log');
 let bodyParser = require('koa-bodyparser');
 let koaBody = require('koa-body');
 let config = require('./server/config/config');
-let AppRouter = require('./server/router/index');
-let connectDB = require('./server/database/connect');
-let session = require('koa-session2');
 let responseFormat = require('./server/util/responseFormat');
-let redis = require('./server/database/redisStorage.js');
+const childProcess = require('child_process');
+let path = require('path');
+let startFilePath = path.resolve(__dirname, './bin/start.sh');
 
+/**
+ * register router and connect db to expose serve
+ *
+ * @return   {void}
+ */
+async function startServe () {
+    if (await fileUtil.exists(startFilePath)) {
+        let AppRouter = require('./server/router/index');
+        let connectDB = require('./server/database/connect');
+        let redis = require('./server/database/redisStorage.js');
+        let session = require('koa-session2');
+
+        // redis记录session
+        app.use(session({
+            store: redis
+        }));
+
+        await connectDB();
+
+        // register router
+        new AppRouter(app);
+    } else {
+        app.use(async (ctx) => {
+            if (ctx.originalUrl === "/api/install") {
+                ctx.body = responseFormat.responseFormat(200, 'restart application', true);
+                let params = ctx.request.body;
+                let paramStr = '';
+                params.forEach(item => {
+                    paramStr += `export ${item.name}='${item.value}'; #${item.description} \n`;
+                });
+                await fileUtil.createFile(startFilePath, `${paramStr}npm run stop && npm run publish`);
+                childProcess.exec(`sh ${startFilePath}`, (err) => {
+                    if (err) {
+                        console.error(`exec error: ${err}`);
+                    }
+                })
+            } else {
+                ctx.body = responseFormat.responseFormat(0, 'config params to install application', {});
+            }
+        })
+    }
+}
+
+/**
+ * entrance
+ *
+ * @return   {void}
+ */
 async function start () {
     // 处理全局错误
     app.use(async (ctx, next) => {
@@ -51,8 +99,6 @@ async function start () {
         await next();
     });
 
-    await connectDB();
-
     // 文件上传multiple/from-data 解析到req.body
     app.use(koaBody({
         multipart: true,
@@ -62,16 +108,10 @@ async function start () {
     // 请求参数解析
     app.use(bodyParser());
 
-    // redis记录session
-    app.use(session({
-        store: redis
-    }));
+    await startServe();
 
-    // register router
-    new AppRouter(app);
-
-    app.listen(process.env.ICON_APP_PORT || config.ICON_APP_PORT, () => {
-        log.debug(`app listen on port ${process.env.ICON_APP_PORT || config.ICON_APP_PORT} ...`);
+    app.listen(config.ICON_APP_PORT, () => {
+        log.debug(`app listen on port ${config.ICON_APP_PORT} ...`);
     });
 
     app.on('error', (err) => {

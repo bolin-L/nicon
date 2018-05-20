@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "publish": "pm2 start index.js --name iconServer -f -e ./logs/icon.err.log -o ./logs/icon.log",
-    "stop": "pm2 stop iconServer",
+    "stop": "pm2 delete iconServer",
     "lint": "eslint --ext .js ./ --fix",
-    "start": "node index.js"
+    "start": "node index.js",
+    "restart": "pm2 restart iconServer"
   },
   "author": "",
   "license": "ISC",

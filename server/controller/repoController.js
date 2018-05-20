@@ -485,15 +485,20 @@ class RepoController {
                 repoIcons.push(iconItem);
                 await fileUtil.createFile(path.join(repoSvgPath, iconItem.iconName + '.svg'), iconItem.iconContent);
             }
+            let uploadResult = {};
+            let svgSpriteResult = '';
             // must has svg
             if (repoItem.iconIds.length > 0) {
                 await icon.compileSvg2Icon(repoPath, repoItem.iconPrefix, repoItem.fontPath);
-            }
-            // output to server and return css url and css content
-            let uploadResult = await uploadService.upload(repoPath);
+                // output to server and return css url and css content
+                uploadResult = await uploadService.upload(repoPath);
 
-            // svg sprite
-            let svgSpriteResult = svgSprite(repoItem.iconPrefix, repoIcons);
+                // svg sprite
+                svgSpriteResult = svgSprite(repoItem.iconPrefix, repoIcons);
+            } else {
+                uploadResult = {url: '', cssContent: ''};
+                svgSpriteResult = '';
+            }
             // update sync status
             await db.iconRepo.update({
                 repoId: params.repoId
