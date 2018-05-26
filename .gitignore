@@ -10,6 +10,22 @@ logs/
 .cache/
 resource/repository/
 
+# reserve default service
+#login service
+server/service/login/
+!server/service/login/default/
+!server/service/login/github/
+!server/service/login/github_qiniu/
+server/service/login/index.js
+
+
+#upload service
+server/upload/login/
+!server/upload/login/default/
+!server/upload/login/qiniu/
+!server/upload/login/github_qiniu/
+server/upload/login/index.js
+
 # personal start script
 start.sh
 start.bat
