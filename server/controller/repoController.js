@@ -433,6 +433,16 @@ class RepoController {
                 }
             }
         });
+
+        // remove svg file from resource
+        let repoItem = await db.iconRepo.findOne({
+            repoId: params.repoId
+        });
+        let iconItem = await db.icon.findOne({
+            iconId: params.iconId
+        });
+        let iconPath = path.resolve(__dirname, `../../resource/repository/${repoItem.ownerId}-${repoItem.iconPrefix}/svg/${iconItem.iconName}.svg`);
+        await fileUtil.deleteFile(iconPath);
         log.debug(`user ${userInfo.userId} delete icon ${params.iconId} from repo ${params.repoId}`);
 
         ctx.body = responseFormat.responseFormat(200, 'delete success!', true);
@@ -470,9 +480,9 @@ class RepoController {
         if (repoItem.unSync) {
             let repoPath = path.join(config.rootRepoPath, `./${repoItem.ownerId}-${repoItem.iconPrefix}`);
             // clean all svg for avoid cache or change iconPrefix, maintain if default
-            if (config.productType === 'default') {
-                await fileUtil.deleteDirector(repoPath);
-            }
+            // if (config.productType === 'default') {
+            //     await fileUtil.deleteDirector(repoPath);
+            // }
             let repoSvgPath = path.join(repoPath, './svg/');
             let repoIcons = [];
             await fileUtil.createDirector(repoSvgPath);
@@ -511,9 +521,9 @@ class RepoController {
             log.debug(`user ${userInfo.userId} sync repo ${params.repoId} success`);
 
             // clean all svg for avoid cache or change iconPrefix, delete if access thirdly upload
-            if (config.productType !== 'default') {
-                await fileUtil.deleteDirector(repoPath);
-            }
+            // if (config.productType !== 'default') {
+            //     await fileUtil.deleteDirector(repoPath);
+            // }
             ctx.body = responseFormat.responseFormat(200, 'update success!', uploadResult);
             return;
         }

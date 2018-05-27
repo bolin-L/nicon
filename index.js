@@ -1,12 +1,12 @@
 let Koa = require('koa');
 let app = new Koa();
 let fileUtil = require('./server/util/fileUtil');
+let installApp = require('./server/middleware/install');
 let log = require('./server/util/log');
 let bodyParser = require('koa-bodyparser');
 let koaBody = require('koa-body');
 let config = require('./server/config/config');
 let responseFormat = require('./server/util/responseFormat');
-const childProcess = require('child_process');
 let path = require('path');
 let startFilePath = path.resolve(__dirname, './bin/start.sh');
 
@@ -32,24 +32,7 @@ async function startServe () {
         // register router
         new AppRouter(app);
     } else {
-        app.use(async (ctx) => {
-            if (ctx.originalUrl === "/api/install") {
-                ctx.body = responseFormat.responseFormat(200, 'restart application', true);
-                let params = ctx.request.body;
-                let paramStr = '';
-                params.forEach(item => {
-                    paramStr += `export ${item.name}='${item.value}'; #${item.description} \n`;
-                });
-                await fileUtil.createFile(startFilePath, `${paramStr}npm run stop && npm run publish`);
-                childProcess.exec(`sh ${startFilePath}`, (err) => {
-                    if (err) {
-                        console.error(`exec error: ${err}`);
-                    }
-                })
-            } else {
-                ctx.body = responseFormat.responseFormat(0, 'config params to install application', {});
-            }
-        })
+        app.use(installApp())
     }
 }
 
