@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 lib/
-logs/
+logs/*.log
 .cache/
 resource/repository/
 

@@ -1,0 +1,1 @@
+## logs 文件夹必须存在， 否则在linux中运行sh ./bin/start.sh 时会报错
