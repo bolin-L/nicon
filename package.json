@@ -8,6 +8,7 @@
     "stop": "pm2 delete iconServer",
     "lint": "eslint --ext .js ./ --fix",
     "start": "node index.js",
+    "reset": "pm2 reset iconServer && pm2 updatePM2",
     "restart": "pm2 restart iconServer"
   },
   "author": "",

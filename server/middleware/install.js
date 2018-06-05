@@ -20,7 +20,7 @@ module.exports = function () {
                 }
                 paramStr += `export ${item.name}='${item.value}'; #${item.description} \n`;
             });
-            await fileUtil.createFile(startFilePath, `npm run stop;\n${paramStr}npm run publish`);
+            await fileUtil.createFile(startFilePath, `npm run reset;\n${paramStr}npm run publish;\n`);
 
             // 登录上传服务
             if (existService.indexOf(productType) === -1) {
