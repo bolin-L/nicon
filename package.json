@@ -9,7 +9,7 @@
     "lint": "eslint --ext .js ./ --fix",
     "start": "node index.js",
     "reset": "pm2 reset iconServer && pm2 updatePM2",
-    "restart": "pm2 restart iconServer"
+    "restart": "pm2 restart iconServer --update-env"
   },
   "author": "",
   "license": "ISC",
