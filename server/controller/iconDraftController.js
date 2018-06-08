@@ -172,6 +172,10 @@ class IconDraftController {
         // 验证完成之后再保存
         for (let i = 0; i < iconItems.length; i++) {
             let iconName = this.getName(iconItems[i].iconName);
+            if (ctx.request.body.resetColor) {
+                let iconInfo = await fileUtil.formatSvgFile(iconItems[i].iconContent);
+                iconItems[i].iconContent = iconInfo.iconContent;
+            }
             let iconItem = await iconControllerIns.saveIcon(iconName, iconItems[i].iconContent, userInfo);
             newIcons.push(iconItem);
         }

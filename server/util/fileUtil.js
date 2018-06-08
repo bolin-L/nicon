@@ -3,7 +3,7 @@ const SVGO = require('svgo');
 let rimraf = require('rimraf');
 let mkdirp = require('mkdirp');
 
-const svgo = new SVGO({
+let svgConfig = {
     plugins: [{
         cleanupAttrs: true,
     }, {
@@ -37,7 +37,7 @@ const svgo = new SVGO({
     }, {
         convertStyleToAttrs: true,
     }, {
-        convertColors: true,
+        convertColors: false,
     }, {
         convertPathData: true,
     }, {
@@ -72,10 +72,8 @@ const svgo = new SVGO({
         transformsWithOnePath: false,
     }, {
         removeDimensions: true,
-    }, {
-        removeAttrs: {attrs: '(stroke|fill)'},
     }]
-});
+};
 
 module.exports = {
     /**
@@ -183,19 +181,21 @@ module.exports = {
      * @param    {Boolean}      resetColor    重置颜色
      * @return   {Object}       处理后的对象
      */
-    async formatSvgFile (content, resetColor = true) {
+    async formatSvgFile (content, resetColor = false) {
         // 添加style
+        let styleValue = 'width: 1em; height: 1em;vertical-align: middle;overflow: hidden;';
         if (/style=\"\S*\"/.test(content)) {
-            content = content.replace(/style="(.*?)"/, 'style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"');
+            content = content.replace(/style="(.*?)"/, `style="${styleValue}"`);
         } else {
-            content = content.replace(/<svg/, '<svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"');
+            content = content.replace(/<svg/, `<svg style="${styleValue}"`);
         }
-
-        let result = await svgo.optimize(content);
         if (resetColor) {
-            result.data = result.data.replace(/fill=".*?"/g, 'fill="currentColor"');
-            result.data = result.data.replace(/stroke=".*?"/g, 'stroke="currentColor"');
+            svgConfig.plugins.push({
+                removeAttrs: {attrs: '(stroke|fill)'}
+            })
         }
+        const svgo = new SVGO(svgConfig);
+        let result = await svgo.optimize(content);
         // 把宽高加到viewBox中
         if (result.data.indexOf('viewBox=') === -1 && result.info.width && result.info.height) {
             result.data = result.data.replace(/<svg/, `<svg viewBox="0 0 ${result.info.width} ${result.info.height}"`);
