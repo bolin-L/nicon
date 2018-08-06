@@ -88,7 +88,7 @@ class RepoController {
         }
 
         // validate unique
-        await this.iconRepoExist(data, userInfo);
+        // await this.iconRepoExist(data, userInfo);
 
         // build repo data
         data = Object.assign(repoItem, data, {

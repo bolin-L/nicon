@@ -1,5 +1,6 @@
 /* eslint-disable */
 const validatorUtil =  require('./validatorUtil');
+const responseFormat = require('./responseFormat');
 
 module.exports =  {
     validate (value, rules) {
