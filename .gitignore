@@ -9,6 +9,7 @@ lib/
 logs/*.log
 .cache/
 resource/repository/
+.vscode/
 
 # reserve default service
 #login service

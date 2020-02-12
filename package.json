@@ -4,12 +4,12 @@
   "description": "字体图标管理平台 http://icon.bolin.site/#/",
   "main": "index.js",
   "scripts": {
-    "publish": "pm2 start index.js --name iconServer -f -e ./logs/icon.err.log -o ./logs/icon.log",
-    "stop": "pm2 delete iconServer",
+    "publish": "./node_modules/pm2/bin/pm2 start index.js --name iconServer -f -e ./logs/icon.err.log -o ./logs/icon.log",
+    "stop": "./node_modules/pm2/bin/pm2 delete iconServer",
     "lint": "eslint --ext .js ./ --fix",
     "start": "node index.js",
-    "reset": "pm2 reset iconServer && pm2 updatePM2",
-    "restart": "pm2 restart iconServer --update-env"
+    "reset": "./node_modules/pm2/bin/pm2 reset iconServer && ./node_modules/pm2/bin/pm2 updatePM2",
+    "restart": "./node_modules/pm2/bin/pm2 restart iconServer --update-env"
   },
   "author": "",
   "license": "ISC",
@@ -36,13 +36,13 @@
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.0",
     "koa-session2": "^2.2.5",
+    "koa-static": "^5.0.0",
     "koa-static-cache": "^5.1.2",
     "loadash": "^1.0.0",
     "mkdirp": "^0.5.1",
     "mongoose": "^4.12.1",
     "mongoose-unique-array": "^0.2.0",
     "pinyin": "^2.8.3",
-    "pm2": "^2.9.1",
     "qiniu": "^7.1.2",
     "querystring": "^0.2.0",
     "request": "^2.83.0",
@@ -68,6 +68,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "gulp-rev": "^8.1.1",
     "lodash": "^4.17.4",
-    "node-debug": "^0.1.0"
+    "node-debug": "^0.1.0",
+    "pm2": "^2.10.4"
   }
 }

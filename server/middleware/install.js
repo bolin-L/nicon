@@ -7,7 +7,7 @@ let startFilePath = path.resolve(__dirname, '../../bin/start.sh');
 
 module.exports = function () {
     return async function (ctx) {
-        if (ctx.originalUrl === "/api/install") {
+        if (ctx.originalUrl === '/api/install') {
             ctx.body = responseFormat.responseFormat(200, 'restart application', true);
             let params = ctx.request.body;
             let existService = ['default', 'default_qiniu', 'github_default', 'github_qiniu'];
@@ -40,7 +40,6 @@ module.exports = function () {
                     await fileUtil.createFile(path.resolve(uploadRootPath, './index.js'), params.upload.index);
                     await fileUtil.createFile(path.resolve(uploadRootPath, './config.js'), params.upload.config);
                 }
-
             }
             childProcess.exec(`sh ${startFilePath}`, (err) => {
                 if (err) {

@@ -1,5 +1,6 @@
 let Koa = require('koa');
 let app = new Koa();
+const KoaStatic = require('koa-static');
 let fileUtil = require('./server/util/fileUtil');
 let installApp = require('./server/middleware/install');
 let log = require('./server/util/log');
@@ -49,7 +50,7 @@ async function start () {
             const result = await next();
             const spendTime = +new Date() - start;
             const normalTTL = 350;
-            const requestStatus = spendTime > normalTTL ? 'optimize': 'normal';
+            const requestStatus = spendTime > normalTTL ? 'optimize' : 'normal';
             log.debug(`[${requestStatus}] request [${ctx.originalUrl}] spend time is ${spendTime}ms ...`);
             return result;
         } catch (error) {
@@ -90,6 +91,8 @@ async function start () {
 
     // 请求参数解析
     app.use(bodyParser());
+
+    app.use(KoaStatic(path.join(__dirname, 'public'), {}));
 
     await startServe();
 
