@@ -40,7 +40,7 @@
     "koa-static-cache": "^5.1.2",
     "loadash": "^1.0.0",
     "mkdirp": "^0.5.1",
-    "mongoose": "^4.12.1",
+    "mongoose": "^5.8.11",
     "mongoose-unique-array": "^0.2.0",
     "pinyin": "^2.8.3",
     "qiniu": "^7.1.2",
