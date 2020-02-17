@@ -26,7 +26,7 @@ class DefaultUpload {
         for (let font of fontFiles) {
             let fileExt = font.match(/.*\.(\w+)$/)[1];
             let fontPath = path.join(fontDirPath, font).replace(__dirname, '');
-            fontMap[fileExt] = fontPath.replace(process.cwd(), `//${config.host}`);
+            fontMap[fileExt] = fontPath.replace(`${process.cwd()}/public`, `//${config.host}`);
         }
         return fontMap;
     }
@@ -58,7 +58,7 @@ class DefaultUpload {
         let cssDirPath = path.join(dirPath, './css');
         let cssFiles = await fileUtil.readDirector(cssDirPath);
         let cssPath = path.join(dirPath, './css/' + (cssFiles[0] || 'icons.css'));
-        return cssPath.replace(process.cwd(), `//${config.host}`);
+        return cssPath.replace(`${process.cwd()}/public`, `//${config.host}`);
     }
 }
 

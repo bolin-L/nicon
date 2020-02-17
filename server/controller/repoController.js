@@ -441,7 +441,7 @@ class RepoController {
         let iconItem = await db.icon.findOne({
             iconId: params.iconId
         });
-        let iconPath = path.resolve(__dirname, `../../resource/repository/${repoItem.ownerId}-${repoItem.iconPrefix}/svg/${iconItem.iconName}.svg`);
+        let iconPath = path.resolve(__dirname, `../../public/resource/repository/${repoItem.ownerId}-${repoItem.iconPrefix}/svg/${iconItem.iconName}.svg`);
         await fileUtil.deleteFile(iconPath);
         log.debug(`user ${userInfo.userId} delete icon ${params.iconId} from repo ${params.repoId}`);
 

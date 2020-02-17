@@ -8,7 +8,7 @@ package-lock.json
 lib/
 logs/*.log
 .cache/
-resource/repository/
+public/resource/repository/
 .vscode/
 
 # reserve default service

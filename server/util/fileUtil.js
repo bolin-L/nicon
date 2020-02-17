@@ -39,7 +39,7 @@ let svgConfig = {
     }, {
         convertColors: false,
     }, {
-        convertPathData: true,
+        convertPathData: false,
     }, {
         convertTransform: true,
     }, {
