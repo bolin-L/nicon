@@ -12,7 +12,7 @@ Nicon 是一个集图标上传、展示、使用于一身的字体图标管理�
 
 ## DOCS
 
-[使用文档](http://icon.bolin.site/resource/docs/README.md)
+[使用文档](http://icon.bolin.site/resource/docs/README.html)
 
 ## License
 MIT
