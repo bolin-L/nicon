@@ -60,7 +60,6 @@ module.exports = {
                 .pipe(gulp.dest(path.join(repoPath, './fonts/')))
                 .on('finish', function () {
                     console.log('font generation over');
-                    clearTimeout(timer);
                     resolve();
                 });
         })
