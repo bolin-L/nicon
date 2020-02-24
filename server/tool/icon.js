@@ -23,41 +23,45 @@ module.exports = {
     },
     compileIcon (iconPrefix, fontPath, svgPath, templatePath, repoPath) {
         return new Promise((resolve, reject) => {
-            gulp.src([svgPath])
-                .pipe(iconfont({
-                    fontName: iconPrefix,
-                    // prependUnicode: true,
-                    // startUnicode: 0xE001,
-                    formats: ['svg', 'ttf', 'eot', 'woff'],
-                    normalize: true,
-                    centerHorizontally: true,
-                    fontHeight: 1024 // must need for perfect icon
-                }))
-                .on('glyphs', function (glyphs, options) {
-                    glyphs.forEach(function (glyph, idx, arr) {
-                        arr[idx].codePoint = glyph.unicode[0].charCodeAt(0).toString(16).toUpperCase()
-                    });
-                    gulp.src(path.join(templatePath, './iconTemplate.css'))
-                        .pipe(consolidate('lodash', {
-                            glyphs: glyphs,
-                            fontName: iconPrefix,
-                            fontPath: '../fonts/',
-                            cssClass: iconPrefix
-                        }))
+            try {
+                gulp.src([svgPath])
+                    .pipe(iconfont({
+                        fontName: iconPrefix,
+                        // prependUnicode: true,
+                        // startUnicode: 0xE001,
+                        formats: ['svg', 'ttf', 'eot', 'woff'],
+                        normalize: true,
+                        centerHorizontally: true,
+                        fontHeight: 1024 // must need for perfect icon
+                    }))
+                    .on('glyphs', function (glyphs, options) {
+                        glyphs.forEach(function (glyph, idx, arr) {
+                            arr[idx].codePoint = glyph.unicode[0].charCodeAt(0).toString(16).toUpperCase()
+                        });
+                        gulp.src(path.join(templatePath, './iconTemplate.css'))
+                            .pipe(consolidate('lodash', {
+                                glyphs: glyphs,
+                                fontName: iconPrefix,
+                                fontPath: '../fonts/',
+                                cssClass: iconPrefix
+                            }))
                         // css 给demo文件用
-                        .pipe(rename('icons.css'))
-                        .pipe(rev())
-                        .pipe(gulp.dest(path.join(repoPath, './css/')))
-                        .on('finish', function () {
-                            console.log('css file generation over!');
-                        })
-                })
-                .pipe(rev())
-                .pipe(gulp.dest(path.join(repoPath, './fonts/')))
-                .on('finish', function () {
-                    console.log('font generation over');
-                    resolve();
-                });
+                            .pipe(rename('icons.css'))
+                            .pipe(rev())
+                            .pipe(gulp.dest(path.join(repoPath, './css/')))
+                            .on('finish', function () {
+                                console.log('css file generation over!');
+                            })
+                    })
+                    .pipe(rev())
+                    .pipe(gulp.dest(path.join(repoPath, './fonts/')))
+                    .on('finish', function () {
+                        console.log('font generation over');
+                        resolve();
+                    });
+            } catch (e) {
+                throw new Error(e);
+            }
         })
     }
 };
