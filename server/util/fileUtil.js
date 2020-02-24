@@ -63,7 +63,7 @@ let svgConfig = {
     }, {
         removeRasterImages: false,
     }, {
-        mergePaths: true,
+        mergePaths: false,
     }, {
         convertShapeToPath: true,
     }, {
