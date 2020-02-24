@@ -1,5 +1,5 @@
 let path = require('path');
-let host = process.env.productHost || 'icon-local.bolin.site';
+let host = process.env.productHost || 'icon.bolin.site';
 module.exports = {
     productType: process.env.productType || 'default',
     url: `http://${host}`,
