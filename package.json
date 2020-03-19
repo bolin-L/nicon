@@ -12,7 +12,7 @@
     "restart": "./node_modules/pm2/bin/pm2 restart iconServer --update-env"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "async": "^2.5.0",
     "crypto": "^1.0.1",
