@@ -3,16 +3,16 @@
  *
  */
 
-let responseFormat = require('../util/responseFormat');
-let db = require('../database');
-let fileUtil = require('../util/fileUtil');
-let incUtil = require('../util/incUtil');
-let IconController = require('./iconController');
-let iconControllerIns = new IconController();
-let RepoController = require('./repoController');
-let repoControllerIns = new RepoController();
-let log = require('../util/log');
-let pinyin = require('pinyin');
+const responseFormat = require('../util/responseFormat');
+const db = require('../database');
+const fileUtil = require('../util/fileUtil');
+const incUtil = require('../util/incUtil');
+const IconController = require('./iconController');
+const iconControllerIns = new IconController();
+const RepoController = require('./repoController');
+const repoControllerIns = new RepoController();
+const log = require('../util/log');
+const pinyin = require('pinyin');
 
 class IconDraftController {
     /**
@@ -22,9 +22,9 @@ class IconDraftController {
      * @return   {void}
      */
     async getIconDraftList (ctx) {
-        let userInfo = ctx.userInfo;
-        let query = ctx.request.query || {};
-        let result = await db.iconDraft.find({
+        const userInfo = ctx.userInfo;
+        const query = ctx.request.query || {};
+        const result = await db.iconDraft.find({
             ownerId: userInfo.userId
         }, global.globalConfig.iconDraftExportFields,
         {
@@ -32,7 +32,7 @@ class IconDraftController {
             skip: parseInt((query.pageIndex - 1) * query.pageSize)
         }
         );
-        query.totalCount = await db.iconDraft.count({ownerId: userInfo.userId});
+        query.totalCount = await db.iconDraft.count({ ownerId: userInfo.userId });
         ctx.body = responseFormat.responseFormatList(200, '', result, query);
     }
 
@@ -43,43 +43,46 @@ class IconDraftController {
      * @return   {void}
      */
     async saveDraftIcon (ctx) {
-        let userInfo = ctx.userInfo;
-        let fileParams = (ctx.request.body || {}).files;
+        const userInfo = ctx.userInfo;
+        const fileParams = {
+            file: {},
+            ...ctx.request.files
+        };
 
-        if (!/\.svg$/.exec(fileParams.file.name)) {
+        if (!/\.svg$/.exec(fileParams?.file?.originalFilename)) {
             ctx.body = responseFormat.responseFormat(200, '请上传svg格式图片！', false);
             return;
         } else {
-            fileParams.file.name = fileParams.file.name.replace('.svg', '')
+            fileParams.file.originalFilename = fileParams.file.originalFilename.replace('.svg', '')
         }
         // 获取文件内容，再删掉
-        let fileContent = await fileUtil.readFile(fileParams.file.path, {encoding: 'utf8'});
-        await fileUtil.deleteFile(fileParams.file.path);
+        const fileContent = await fileUtil.readFile(fileParams.file.filepath, { encoding: 'utf8' });
+        await fileUtil.deleteFile(fileParams.file.filepath);
         // 对svg进行处理，重新绘制
-        let iconInfo = await fileUtil.formatSvgFile(fileContent);
-        await this.saveDraftIconToDB(fileParams.file.name, iconInfo, userInfo, ctx);
+        const iconInfo = await fileUtil.formatSvgFile(fileContent);
+        await this.saveDraftIconToDB(fileParams.file.originalFilename, iconInfo, userInfo, ctx);
     }
 
     async collectIcon (ctx) {
-        let userInfo = ctx.userInfo;
-        let params = ctx.request.body;
+        const userInfo = ctx.userInfo;
+        const params = ctx.request.body;
 
         await this.saveDraftIconToDB(params.iconName, params, userInfo, ctx);
     }
 
     async saveDraftIconToDB (iconName, iconInfo, userInfo, ctx) {
         // 获取唯一自增Id
-        let iconId = await incUtil.getIncId({model: 'iconDraft', field: 'iconId'});
+        const iconId = await incUtil.getIncId({ model: 'iconDraft', field: 'iconId' });
         // 构建完整数据
-        let params = {
-            iconName: iconName,
+        const params = {
+            iconName,
             ownerId: userInfo.userId,
             iconContent: iconInfo.iconContent,
             iconOriginContent: iconInfo.iconOriginContent,
             svgPath: iconInfo.svgPath,
             createTime: global.globalConfig.nowTime,
             updateTime: global.globalConfig.nowTime,
-            iconId: iconId
+            iconId
         };
         await db.iconDraft.add(params);
         ctx.body = responseFormat.responseFormat(200, '', {
@@ -95,8 +98,8 @@ class IconDraftController {
      * @return   {void}
      */
     async deleteDraftIcon (ctx) {
-        let userInfo = ctx.userInfo;
-        let params = ctx.request.body;
+        const userInfo = ctx.userInfo;
+        const params = ctx.request.body;
 
         await db.iconDraft.delete({
             iconId: params.iconId,
@@ -113,8 +116,8 @@ class IconDraftController {
      * @return   {void}
      */
     async updateDraftIcon (ctx) {
-        let userInfo = ctx.userInfo;
-        let params = ctx.request.body;
+        const userInfo = ctx.userInfo;
+        const params = ctx.request.body;
 
         await db.iconDraft.update({
             iconId: params.iconId,
@@ -133,8 +136,8 @@ class IconDraftController {
      * @return   {void}
      */
     async downloadIcon (ctx) {
-        let params = ctx.params || {};
-        let iconItem = await db.iconDraft.findOne({
+        const params = ctx.params || {};
+        const iconItem = await db.iconDraft.findOne({
             iconId: params.iconId
         });
         if (!iconItem) {
@@ -154,11 +157,11 @@ class IconDraftController {
      * @return   {void}
      */
     async changeDraft2Icon (ctx) {
-        let userInfo = ctx.userInfo;
-        let iconItems = await db.iconDraft.find({
+        const userInfo = ctx.userInfo;
+        const iconItems = await db.iconDraft.find({
             ownerId: userInfo.userId
         });
-        let newIcons = [];
+        const newIcons = [];
         // 允许名称重复，但名称不可修改
         // for (let i = 0; i < iconItems.length; i++) {
         //     let iconItem = await db.icon.findOne({
@@ -171,12 +174,12 @@ class IconDraftController {
         // }
         // 验证完成之后再保存
         for (let i = 0; i < iconItems.length; i++) {
-            let iconName = this.getName(iconItems[i].iconName);
+            const iconName = this.getName(iconItems[i].iconName);
             if (ctx.request.body.resetColor) {
-                let iconInfo = await fileUtil.formatSvgFile(iconItems[i].iconContent);
+                const iconInfo = await fileUtil.formatSvgFile(iconItems[i].iconContent);
                 iconItems[i].iconContent = iconInfo.iconContent;
             }
-            let iconItem = await iconControllerIns.saveIcon(iconName, iconItems[i].iconContent, userInfo);
+            const iconItem = await iconControllerIns.saveIcon(iconName, iconItems[i].iconContent, userInfo);
             newIcons.push(iconItem);
         }
         // 添加到指定图标库中
@@ -190,6 +193,7 @@ class IconDraftController {
         });
         ctx.body = responseFormat.responseFormat(200, '', true);
     }
+
     /**
      * 转化中文为拼音
      *

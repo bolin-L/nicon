@@ -6,10 +6,11 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 lib/
-logs/*.log
+logs/
 .cache/
 public/resource/repository/
 .vscode/
+bin/start_local.sh
 
 # reserve default service
 #login service

@@ -60,7 +60,7 @@ try {
     fs.mkdirSync(logRoot);
 }
 // export Logger instance
-module.exports = new (winston.Logger)({
+module.exports = new (winston.createLogger)({
     level: options.level || 'debug',
     transports: [
         new winston.transports.Console(DEFAULT),

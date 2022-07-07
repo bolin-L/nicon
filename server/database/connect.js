@@ -9,9 +9,7 @@ module.exports = function () {
         if (!dbConfig.username) {
             dbUrl = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.dbName}`;
         }
-        mongoose.connect(dbUrl, {
-            poolSize: 20
-        });
+        mongoose.connect(dbUrl);
         mongoose.connection.on('connected', function () {
             log.debug(`connect to mongodb success, dbUrl: ${dbUrl}`);
             resolve();

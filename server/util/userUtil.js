@@ -49,8 +49,7 @@ module.exports = {
         ctx.cookies.set('ICON_SESSION', value, {
             path: '/',
             domain: config.host,
-            expires: expiredTime,
-            httpOnly: true
+            expires: expiredTime
         })
     },
 
@@ -67,8 +66,7 @@ module.exports = {
         ctx.cookies.set('ICON_AUTO_LOGIN_SESSION', value, {
             path: '/',
             domain: config.host,
-            expires: expiredTime,
-            httpOnly: true
+            expires: expiredTime
         });
     },
 

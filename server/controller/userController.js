@@ -3,19 +3,19 @@
  *
  */
 
-let config = require('../config/config');
-let log = require('../util/log');
-let responseFormat = require('../util/responseFormat');
-let userRegisterRules = require('../validation/userRegisterRules');
-let userLoginRules = require('../validation/userLoginRules');
-let validator = require('../util/validator');
-let db = require('../database');
-let redis = require('../database/redisStorage');
-let incUtil = require('../util/incUtil');
-let cryptoUtil = require('../util/cryptoUtil');
-let userUtil = require('../util/userUtil');
-let avatarConfig = require('../config/avatarConfig');
-let loginService = require('../service/login');
+const config = require('../config/config');
+const log = require('../util/log');
+const responseFormat = require('../util/responseFormat');
+const userRegisterRules = require('../validation/userRegisterRules');
+const userLoginRules = require('../validation/userLoginRules');
+const validator = require('../util/validator');
+const db = require('../database');
+const redis = require('../database/redisStorage');
+const incUtil = require('../util/incUtil');
+const cryptoUtil = require('../util/cryptoUtil');
+const userUtil = require('../util/userUtil');
+const avatarConfig = require('../config/avatarConfig');
+const loginService = require('../service/login');
 
 class UserController {
     /**
@@ -24,7 +24,7 @@ class UserController {
      * @param    {Object}           ctx                         request object
      */
     async userOpenIdLogin (ctx) {
-        let userInfo = await loginService.login(ctx)
+        const userInfo = await loginService.login(ctx)
         if (!userInfo) {
             throw new Error('login fail, no userInfo return');
         }
@@ -42,7 +42,7 @@ class UserController {
      * @return   {void}
      */
     async appThirdLogin (ctx, userInfo) {
-        let existUser = await db.user.findOne({
+        const existUser = await db.user.findOne({
             userName: userInfo.userName
         }, global.globalConfig.userExportFields);
         // exist go login or go register
@@ -66,8 +66,8 @@ class UserController {
     * @param    {Object}           userInfo                    user info from app database
     */
     async userThirdLogin (ctx, userInfo) {
-        let sessionId = await userUtil.setIconSession(userInfo.userId, ctx);
-        let autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfo.userId, ctx);
+        const sessionId = await userUtil.setIconSession(userInfo.userId, ctx);
+        const autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfo.userId, ctx);
         // generate session to redis and set cookie to client
         userUtil.setIconSessionCookie(sessionId, false, ctx);
         userUtil.setIconAutoLoginSessionCookie(autoLoginSessionId, false, ctx);
@@ -84,24 +84,24 @@ class UserController {
      */
     async userThirdRegister (ctx, params) {
         // get increment userId
-        let userId = await incUtil.getIncId({model: 'user', field: 'userId'});
+        const userId = await incUtil.getIncId({ model: 'user', field: 'userId' });
         // set random avatar
-        let index = parseInt(Math.random() * 105);
-        let avatar = avatarConfig[index];
+        const index = parseInt(Math.random() * 105);
+        const avatar = avatarConfig[index];
 
         // build register userInfo
         Object.assign(params, {
             createTime: global.globalConfig.nowTime,
             updateTime: global.globalConfig.nowTime,
-            avatar: avatar,
-            userId: userId
+            avatar,
+            userId
         });
         log.debug(`user register and info: ${JSON.stringify(params)}`);
 
         // save userInfo to app database
         await db.user.add(params);
-        let sessionId = await userUtil.setIconSession(userId, ctx);
-        let autoLoginSessionId = await userUtil.setIconAutoLoginSession(userId, ctx);
+        const sessionId = await userUtil.setIconSession(userId, ctx);
+        const autoLoginSessionId = await userUtil.setIconAutoLoginSession(userId, ctx);
         // generate session to redis and set cookie to client
         userUtil.setIconSessionCookie(sessionId, false, ctx);
         userUtil.setIconAutoLoginSessionCookie(autoLoginSessionId, false, ctx);
@@ -114,35 +114,39 @@ class UserController {
      * @param    {Object}           ctx                         请求对象
      */
     async userLogin (ctx) {
-        let params = ctx.request.body || {};
+        const params = ctx.request.body || {};
         // 验证数据完整性
         validator.validateParamsField(params, userLoginRules, ctx);
 
         // 查询数据库，判断唯一性
-        let userInfo = await db.user.findOne({
+        const userInfo = await db.user.findOne({
             userName: params.userName
         });
         if (userInfo) {
             // 密码校验，正确则生成session
             if (userInfo.password === params.password) {
-                let sessionId = await userUtil.setIconSession(userInfo.userId, ctx);
-                let autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfo.userId, ctx);
+                const sessionId = await userUtil.setIconSession(userInfo.userId, ctx);
+                const autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfo.userId, ctx);
                 // 生成session后给给客户端写cookie
                 userUtil.setIconSessionCookie(sessionId, false, ctx);
                 userUtil.setIconAutoLoginSessionCookie(autoLoginSessionId, false, ctx);
                 delete userInfo.password;
                 ctx.body = responseFormat.responseFormat(200, '', userInfo);
             } else {
-                ctx.body = responseFormat.responseFormat(200, {password: {
-                    message: `密码错误`,
-                    success: false
-                }}, false);
+                ctx.body = responseFormat.responseFormat(200, {
+                    password: {
+                        message: '密码错误',
+                        success: false
+                    }
+                }, false);
             }
         } else {
-            ctx.body = responseFormat.responseFormat(200, {userName: {
-                message: `账号不存在！`,
-                success: false
-            }}, false);
+            ctx.body = responseFormat.responseFormat(200, {
+                userName: {
+                    message: '账号不存在！',
+                    success: false
+                }
+            }, false);
         }
     }
 
@@ -152,41 +156,43 @@ class UserController {
      * @param    {Object}           ctx                         请求对象
      */
     async userRegister (ctx) {
-        let params = ctx.request.body || {};
+        const params = ctx.request.body || {};
         // 验证数据完整性
         validator.validateParamsField(params, userRegisterRules, ctx);
 
         // 查询数据库，判断唯一性
-        let userResult = await db.user.findOne({
+        const userResult = await db.user.findOne({
             userName: params.userName
         });
         if (userResult) {
-            ctx.body = responseFormat.responseFormat(200, {userName: {
-                message: `用户名已经存在, 请直接登录`,
-                success: false
-            }}, false);
+            ctx.body = responseFormat.responseFormat(200, {
+                userName: {
+                    message: '用户名已经存在, 请直接登录',
+                    success: false
+                }
+            }, false);
             return;
         }
 
         // 获取唯一自增Id
-        let userId = await incUtil.getIncId({model: 'user', field: 'userId'});
+        const userId = await incUtil.getIncId({ model: 'user', field: 'userId' });
         // set random avatar
-        let index = parseInt(Math.random() * 105);
-        let avatar = avatarConfig[index];
+        const index = parseInt(Math.random() * 105);
+        const avatar = avatarConfig[index];
 
         // 构建完整用户注册数据
         Object.assign(params, {
             createTime: global.globalConfig.nowTime,
             updateTime: global.globalConfig.nowTime,
-            avatar: avatar,
-            userId: userId,
+            avatar,
+            userId,
             userName: String(params.userName)
         });
 
         // 保存用户信息到数据库
         await db.user.add(params);
-        let sessionId = await userUtil.setIconSession(userId, ctx);
-        let autoLoginSessionId = await userUtil.setIconAutoLoginSession(userId, ctx);
+        const sessionId = await userUtil.setIconSession(userId, ctx);
+        const autoLoginSessionId = await userUtil.setIconAutoLoginSession(userId, ctx);
         // 生成session后给给客户端写cookie
         userUtil.setIconSessionCookie(sessionId, false, ctx);
         userUtil.setIconAutoLoginSessionCookie(autoLoginSessionId, false, ctx);
@@ -237,21 +243,21 @@ class UserController {
         };
         if (autoLoginSessionId) {
             // return userInfo and cookie ICON_SESSION if user exist
-            let exist = await redis.get(autoLoginSessionId);
+            const exist = await redis.get(autoLoginSessionId);
             // decrypt cookie for get userId
             let userInfoCur = cryptoUtil.decrypt(autoLoginSessionId, '');
-            userInfoCur = await db.user.findOne({userId: userInfoCur.userId}, global.globalConfig.userExportFields);
+            userInfoCur = await db.user.findOne({ userId: userInfoCur.userId }, global.globalConfig.userExportFields);
             if (userInfoCur) {
                 userInfo = userInfoCur;
             }
             if (exist && userInfoCur && userInfoCur.userId) {
                 // set cookie to client
-                let sessionId = await userUtil.setIconSession(userInfoCur.userId, ctx);
+                const sessionId = await userUtil.setIconSession(userInfoCur.userId, ctx);
                 userUtil.setIconSessionCookie(sessionId, false, ctx);
             } else if (userInfoCur && userInfoCur.userId) {
                 // user exist but session expired in redis, need to generate session to redis then auto login
-                let autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfoCur.userId, ctx);
-                let sessionId = await userUtil.setIconSession(userInfoCur.userId, ctx);
+                const autoLoginSessionId = await userUtil.setIconAutoLoginSession(userInfoCur.userId, ctx);
+                const sessionId = await userUtil.setIconSession(userInfoCur.userId, ctx);
                 userUtil.setIconSessionCookie(sessionId, false, ctx);
                 userUtil.setIconAutoLoginSessionCookie(autoLoginSessionId, false, ctx);
             }
@@ -265,8 +271,8 @@ class UserController {
      * @param    {Object}           ctx                         request object
      */
     async getUserInfo (ctx) {
-        let params = ctx.params;
-        let userInfo = await db.user.findOne({userId: params.userId}, global.globalConfig.userExportFields);
+        const params = ctx.params;
+        const userInfo = await db.user.findOne({ userId: params.userId }, global.globalConfig.userExportFields);
         if (!userInfo) {
             ctx.body = responseFormat.responseFormat(500, 'user not exist', false);
         } else {

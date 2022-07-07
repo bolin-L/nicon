@@ -1,5 +1,5 @@
 const fs = require('fs');
-const SVGO = require('svgo');
+const { optimize } = require('svgo');
 let rimraf = require('rimraf');
 let mkdirp = require('mkdirp');
 
@@ -194,8 +194,8 @@ module.exports = {
                 removeAttrs: {attrs: '(stroke|fill)'}
             })
         }
-        const svgo = new SVGO(svgConfig);
-        let result = await svgo.optimize(content);
+        // const svgo = new SVGO(svgConfig);
+        let result = await optimize(content);
         // 把宽高加到viewBox中
         if (result.data.indexOf('viewBox=') === -1 && result.info.width && result.info.height) {
             result.data = result.data.replace(/<svg/, `<svg viewBox="0 0 ${result.info.width} ${result.info.height}"`);

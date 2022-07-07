@@ -27,7 +27,7 @@ class RedisStore extends Store {
         } catch (e) {
             throw new Error(e);
         }
-        return sid;
+        return sid.toString();
     }
 
     async destroy (sid, ctx) {

@@ -4,7 +4,7 @@ const KoaStatic = require('koa-static');
 let fileUtil = require('./server/util/fileUtil');
 let installApp = require('./server/middleware/install');
 let log = require('./server/util/log');
-let bodyParser = require('koa-bodyparser');
+// let bodyParser = require('koa-bodyparser');
 let koaBody = require('koa-body');
 let config = require('./server/config/config');
 let responseFormat = require('./server/util/responseFormat');
@@ -87,10 +87,11 @@ async function start () {
     app.use(koaBody({
         multipart: true,
         urlencoded: true
+        // includeUnparsed: true
     }));
 
     // 请求参数解析
-    app.use(bodyParser());
+    // app.use(bodyParser());
 
     app.use(KoaStatic(path.join(__dirname, 'public'), {}));
 
